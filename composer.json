@@ -1,0 +1,29 @@
+{
+    "name": "j-applese3d/wrybill",
+    "description": "Web audio player specifically for studying calls from xeno-canto",
+    "keywords": [],
+    "license": "MIT",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Wrybill\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Wrybill\\Test\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "phpstan/phpstan": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
