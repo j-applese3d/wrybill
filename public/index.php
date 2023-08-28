@@ -1,3 +1,11 @@
+<?php
+
+require_once 'vendor/autoload.php';
+
+$app = new \Wrybill\Wrybill("./public/audio", "./public/.cache", '');
+$files = json_encode($app->getAudioFiles(), JSON_THROW_ON_ERROR);
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,18 +17,11 @@
 </head>
 <body>
 
-<?php
-
-require_once 'vendor/autoload.php';
-
-$app = new \Wrybill\Wrybill("./public/audio", "./public/.cache", '');
-$files = json_encode($app->getAudioFiles(), JSON_THROW_ON_ERROR);
-
-?>
+<div id="content"></div>
 
 <script>
     const app = new App();
-    app.initialize(<?= $files ?>);
+    app.initialize(<?= $files ?>, document.getElementById('content'));
 </script>
 
 </body>

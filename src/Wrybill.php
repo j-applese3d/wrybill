@@ -29,7 +29,6 @@ class Wrybill
 
         // read all the XC files, and generate the bird name .wav s
         foreach ($this->getAudioFiles() as $file) {
-            echo $file['species_en'];
 
             // generate piper wav file.
             $englishNameClean = escapeshellarg($file['species_en']);
