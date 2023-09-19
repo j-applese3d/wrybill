@@ -66,10 +66,13 @@ class Wrybill
                     'filename' => $filename,
                     'xeno_id' => $filenamePcs[0],
                     'species_en' => $filenamePcs[1],
+                    'species_name_audio_file' => $this->cacheDirectory . '/' . $filenamePcs[1] . '.wav',
                     'species_scientific_name' => $filenamePcs[2],
                 ];
             }
         }
+
+        usort($audioFiles, fn ($a, $b) => $a['species_en'] <=> $b['species_en']);
 
         return $audioFiles;
     }

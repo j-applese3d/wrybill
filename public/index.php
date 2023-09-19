@@ -3,26 +3,22 @@
 require_once 'vendor/autoload.php';
 
 $app = new \Wrybill\Wrybill("./public/audio", "./public/.cache", '');
-$files = json_encode($app->getAudioFiles(), JSON_THROW_ON_ERROR);
+$files = $app->getAudioFiles();
 
-?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Wrybill</title>
-    <script src="js/App.js"></script>
-</head>
-<body>
+$playList = [];
+foreach ($files as $file) {
+    $playList[] = [
+        'icon' => null,
+        'title' => $file['species_en'],
+        'file' => '.' . $file['path'], // audio files are stored "up" one directory...
+        'prePlay' => '.' . $file['species_name_audio_file'],
+    ];
+}
 
-<div id="content"></div>
+$htmlFileLocation = './html5-audio-player/index.html';
+$htmlFile = file_get_contents($htmlFileLocation);
+$htmlFile = preg_replace('/playList: \[.*]/s', 'playList: ' . json_encode($playList, JSON_THROW_ON_ERROR), $htmlFile);
+file_put_contents($htmlFileLocation, $htmlFile);
 
-<script>
-    const app = new App();
-    app.initialize(<?= $files ?>, document.getElementById('content'));
-</script>
-
-</body>
-</html>
+echo "File updated!\n";
+exit;
