@@ -80,6 +80,7 @@
             trackTitle,
             audio,
             index = 0,
+            playListOriginal,
             playList,
             volumeBar,
             volumeLength,
@@ -138,6 +139,7 @@
             preloadBar = player.querySelector('.ap-preload-bar');
             volumeBar = player.querySelector('.ap-volume-bar');
 
+            playListOriginal = settings.playList;
             playList = settings.playList;
 
             playBtn.addEventListener('click', playToggle, false);
@@ -234,8 +236,10 @@
                 );
             });
 
+            document.getElementById("pl")?.remove();
+
             pl = create('div', {
-                'className': 'pl-container hide',
+                'className': 'pl-container',
                 'id': 'pl',
                 'innerHTML': !isEmptyList() ? '<ul class="pl-list">' + html.join('') + '</ul>' : '<div class="pl-empty">PlayList is empty</div>'
             });
@@ -317,6 +321,17 @@
             }
         }
 
+        function togglePrePlay() {
+            if (prePlayActive >= 0) prePlayActive = -1; // disable
+            else prePlayActive = 0; // enable
+        }
+
+        function filterList(search) {
+            playList = playListOriginal.filter(o => o.title.indexOf(search) !== -1);
+            index = 0;
+            renderPL();
+            play();
+        }
 
         /**
          *  Player methods
@@ -345,7 +360,6 @@
             document.title = trackTitle.innerHTML = playList[index].title;
 
             if (playList[index].prePlay != null && prePlayActive === 0) {
-                prePlayActive = true;
                 audio.src = playList[index].prePlay;
                 audio.preload = 'auto';
                 prePlayActive = 1;
@@ -353,7 +367,7 @@
             else {
                 audio.src = playList[index].file;
                 audio.preload = 'auto';
-                prePlayActive = 0;
+                prePlayActive = prePlayActive > 0 ? 0 : prePlayActive;
             }
 
             audio.play();
@@ -684,7 +698,14 @@
          */
         return {
             init: init,
-            destroy: destroy
+            destroy: destroy,
+            filterList: filterList,
+            togglePrePlay: togglePrePlay,
+            next: next,
+            prev: prev,
+            play: play,
+            playToggle: playToggle,
+            renderPL
         };
 
     })();

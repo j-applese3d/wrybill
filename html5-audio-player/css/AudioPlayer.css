@@ -21,8 +21,12 @@ button {
 
 body {
   margin: 0;
+  display: flex;
+  flex-flow: column;
+  /*height: 100vh;*/
 }
 #player {
+    flex-grow: 1;
   display: flex;
   flex-flow: column-reverse;
   height: 100vh;
