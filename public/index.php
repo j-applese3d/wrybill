@@ -17,7 +17,7 @@ foreach ($files as $file) {
 
 $htmlFileLocation = './html5-audio-player/index.html';
 $htmlFile = file_get_contents($htmlFileLocation);
-$htmlFile = preg_replace('/playList: \[.*]/s', 'playList: ' . json_encode($playList, JSON_THROW_ON_ERROR), $htmlFile);
+$htmlFile = preg_replace('/playList: \[(.*?)]/s', 'playList: ' . json_encode($playList, JSON_THROW_ON_ERROR), $htmlFile);
 file_put_contents($htmlFileLocation, $htmlFile);
 
 echo "File updated!\n";

@@ -72,7 +72,7 @@ class Wrybill
             }
         }
 
-        usort($audioFiles, fn ($a, $b) => $a['species_en'] <=> $b['species_en']);
+        usort($audioFiles, fn ($a, $b) => $a['species_scientific_name'] <=> $b['species_scientific_name']);
 
         return $audioFiles;
     }
