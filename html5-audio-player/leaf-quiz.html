@@ -13,24 +13,30 @@
             padding: 0;
             font-family: sans-serif;
         }
+
         body {
             font-size: 1.1em;
         }
+
         img {
             max-width: 100%;
         }
+
         button {
             background: lightblue;
             padding: 15px;
             cursor: pointer;
         }
+
         #options, #audio, button {
             margin: 2em;
         }
+
         #options li {
             cursor: pointer;
             padding: 0.5em 1em;
         }
+
         #options li:hover {
             background: lightblue;
         }
@@ -223,4 +229,227 @@
     nextButton.onclick = nextQuiz;
     document.getElementById('quiz').appendChild(nextButton);
 </script>
+
+
+<style>
+    /* Apply styles to the entire table */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 10px 0;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Style table headers */
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        padding: 8px;
+        text-align: left;
+    }
+
+    /* Style table rows */
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Style table data cells */
+    td {
+        padding: 8px;
+        text-align: left;
+    }
+
+    /* Add a border to the table and cells */
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    /* Highlight rows when hovered */
+    tr:hover {
+        background-color: #e6e6e6;
+    }
+    .template {
+        display: none;
+    }
+</style>
+<table id="id_features">
+    <thead>
+    <tr>
+        <th>Species</th>
+        <th>Dorsal Color</th>
+        <th>Ventral Color</th>
+        <th>Crowned</th>
+        <th>Patterned Tertials</th>
+        <th>Yellow rump patch</th>
+        <th>White in tail</th>
+        <th>Relative Size</th>
+        <th>Tip of Mandible (Lower Jaw)</th>
+        <th>Other</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot>
+    <tr>
+        <td colspan="10">
+            Data transcribed from:
+            <a href="https://thesiamsociety.org/wp-content/uploads/2020/04/NHBSS_023_1-2e_Marshall_IdentificationOf.pdf">
+                IDENTIFICATION OF LEAF WARBLERS
+                IN THAILAND
+                by
+                Joe T. Marshall Jr. & Somsak Pantuwattana
+            </a>
+        </td>
+    </tr>
+    <tr class="template">
+        <td class="name"></td>
+        <td class="dorsal"></td>
+        <td class="ventral"></td>
+        <td class="crowned"></td>
+        <td class="patterned"></td>
+        <td class="yellow-rump"></td>
+        <td class="white-tail"></td>
+        <td class="size"></td>
+        <td class="tip"></td>
+        <td class="other"></td>
+    </tr>
+    </tfoot>
+</table>
+<script>
+    const data = {
+        "radwar1": {
+            "Dorsal Color": "Brown",
+            "Ventral Color": "Brown, whitish medially",
+            "Relative Size": "Large",
+            "Tip of Mandible (Lower Jaw)": "Dark"
+        },
+        "duswar": {
+            "Dorsal Color": "Olive-brown",
+            "Ventral Color": "Pale brown chest and flanks; rest dimorphic: either white or pale buff",
+            "Relative Size": "Large",
+            "Tip of Mandible (Lower Jaw)": "Pale",
+            "Other": "Thicker bill than fuscatus"
+        },
+        "yeswar1": {
+            "Dorsal Color": "Olive-brown",
+            "Ventral Color": "Gray anteriorly, yellowish posterially, all streaked with yellow",
+            "Relative Size": "Large",
+            "Tip of Mandible (Lower Jaw)": "Pale"
+        },
+        "butwar1": {
+            "Dorsal Color": "Olive-buff",
+            "Ventral Color": "Golden buff",
+            "Relative Size": "Medium",
+            "Tip of Mandible (Lower Jaw)": "Dark"
+        },
+        "arcwar1": {
+            "Dorsal Color": "Olive-green",
+            "Ventral Color": "Whitish, small bars",
+            "Relative Size": "Large",
+            "Tip of Mandible (Lower Jaw)": "Pale",
+            "Other": "10th primary 1/4 length of #9"
+        },
+        "grewar3": {
+            "Dorsal Color": "Olive-green",
+            "Ventral Color": "Pale greenish-yellow, small bars",
+            "Relative Size": "Narrow",
+            "Tip of Mandible (Lower Jaw)": "Medium",
+            "Other": "Pale 10th primary, 1/2 length of #9"
+        },
+        "pllwar1": {
+            "Dorsal Color": "Olive-brown, darker crown; golden brown on rump",
+            "Ventral Color": "White, with brown flanks, small bars",
+            "Relative Size": "Narrow",
+            "Tip of Mandible (Lower Jaw)": "Large",
+            "Other": "Pale Feet pale"
+        },
+        "eacwar1": {
+            "Dorsal Color": "Olive-green",
+            "Ventral Color": "Whitish, with contrasting lemon yellow vent, small bars",
+            "Crowned": "Crowned",
+            "Relative Size": "Narrow",
+            "Tip of Mandible (Lower Jaw)": "Large",
+            "Other": "Pale"
+        },
+        "blylew1": {
+            "Dorsal Color": "Green",
+            "Ventral Color": "Pale greenish-yellow, double bars",
+            "Crowned": "Crowned",
+            "Relative Size": "Medium",
+            "Tip of Mandible (Lower Jaw)": "Pale"
+        },
+        "davlew1": {
+            "Dorsal Color": "Green",
+            "Ventral Color": "Bright greenish-yellow brighter than reguloides, double bars",
+            "Crowned": "Crowned",
+            "Relative Size": "Medium, smaller than reguloides",
+            "Tip of Mandible (Lower Jaw)": "Pale"
+        },
+        "yevwar1": {
+            "Dorsal Color": "Olive-green",
+            "Ventral Color": "Yellow throat and vent white belly, small double bars",
+            "Crowned": "Crowned",
+            "Relative Size": "Medium",
+            "Tip of Mandible (Lower Jaw)": "Pale"
+        },
+        "subwar3": {
+            "Dorsal Color": "Olive-green",
+            "Ventral Color": "Yellow, small double bars",
+            "Crowned": "Crowned",
+            "Relative Size": "Medium",
+            "Tip of Mandible (Lower Jaw)": "Pale"
+        },
+        "yebwar3": {
+            "Dorsal Color": "Olive-green",
+            "Ventral Color": "Whitish, double bars, faint or lacking",
+            "Crowned": "Crowned",
+            "Patterned Tertials": "Patterned",
+            "Yellow rump patch": "Yellow",
+            "Relative Size": "Very narrow",
+            "Tip of Mandible (Lower Jaw)": "Dark"
+        },
+        "palwar5": {
+            "Dorsal Color": "Olive-green",
+            "Ventral Color": "Pale greenish yellow becoming grayer anteriorly, double bars",
+            "Crowned": "Crowned",
+            "Patterned Tertials": "Patterned",
+            "Yellow rump patch": "Yellow",
+            "White in tail": "Conspicuous white",
+            "Relative Size": "Very small",
+            "Tip of Mandible (Lower Jaw)": "Dark"
+        },
+        "astwar2": {
+            "Dorsal Color": "Green",
+            "Ventral Color": "Yellow-green, double orange",
+            "Crowned": "Crowned",
+            "Patterned Tertials": "Patterned",
+            "Yellow rump patch": "Yellow",
+            "White in tail": "Conspicuous white",
+            "Relative Size": "Medium",
+            "Tip of Mandible (Lower Jaw)": "Dark"
+        }
+    };
+
+    const table = document.querySelector('#id_features');
+    const birdId = Object.keys(data);
+    birdId.forEach((bird) => {
+        // copy template and create new row
+        const row = table.querySelector('.template').cloneNode(true);
+        row.classList.remove('template');
+        row.querySelector('.name').innerText = birds.filter((item) => item.code === bird)[0].name;
+        row.querySelector('.dorsal').innerText = data[bird]['Dorsal Color'] ?? '';
+        row.querySelector('.ventral').innerText = data[bird]['Ventral Color'] ?? '';
+        row.querySelector('.crowned').innerText = data[bird]['Crowned'] ?? '';
+        row.querySelector('.patterned').innerText = data[bird]['Patterned Tertials'] ?? '';
+        row.querySelector('.yellow-rump').innerText = data[bird]['Yellow rump patch'] ?? '';
+        row.querySelector('.white-tail').innerText = data[bird]['White in tail'] ?? '';
+        row.querySelector('.size').innerText = data[bird]['Relative Size'] ?? '';
+        row.querySelector('.tip').innerText = data[bird]['Tip of Mandible (Lower Jaw)'] ?? '';
+        row.querySelector('.other').innerText = data[bird]['Other'] ?? '';
+        table.querySelector('tbody').appendChild(row);
+    });
+
+</script>
+
+
 </body>
+</html>
