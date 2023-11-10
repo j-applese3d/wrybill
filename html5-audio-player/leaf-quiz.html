@@ -278,6 +278,7 @@
         <th>Species</th>
         <th>Dorsal Color</th>
         <th>Ventral Color</th>
+        <th>Wing Bars</th>
         <th>Crowned</th>
         <th>Patterned Tertials</th>
         <th>Yellow rump patch</th>
@@ -304,6 +305,7 @@
         <td class="name"></td>
         <td class="dorsal"></td>
         <td class="ventral"></td>
+        <td class="wingbars"></td>
         <td class="crowned"></td>
         <td class="patterned"></td>
         <td class="yellow-rump"></td>
@@ -327,7 +329,7 @@
             "Ventral Color": "Pale brown chest and flanks; rest dimorphic: either white or pale buff",
             "Relative Size": "Large",
             "Tip of Mandible (Lower Jaw)": "Pale",
-            "Other": "Thicker bill than fuscatus"
+            "Other": "Thicker bill than Radde's"
         },
         "yeswar1": {
             "Dorsal Color": "Olive-brown",
@@ -343,73 +345,92 @@
         },
         "arcwar1": {
             "Dorsal Color": "Olive-green",
-            "Ventral Color": "Whitish, small bars",
+            "Ventral Color": "Whitish, ",
+            "Wing Bars": "small bars",
             "Relative Size": "Large",
             "Tip of Mandible (Lower Jaw)": "Pale",
+            "White in tail": "narrow",
             "Other": "10th primary 1/4 length of #9"
         },
         "grewar3": {
             "Dorsal Color": "Olive-green",
-            "Ventral Color": "Pale greenish-yellow, small bars",
-            "Relative Size": "Narrow",
+            "Ventral Color": "Pale greenish-yellow",
+            "Wing Bars": "small bars",
+            "Relative Size": "Medium",
             "Tip of Mandible (Lower Jaw)": "Medium",
+            "White in tail": "narrow",
             "Other": "Pale 10th primary, 1/2 length of #9"
         },
         "pllwar1": {
             "Dorsal Color": "Olive-brown, darker crown; golden brown on rump",
-            "Ventral Color": "White, with brown flanks, small bars",
-            "Relative Size": "Narrow",
+            "Ventral Color": "White, with brown flanks",
+            "Wing Bars": "small bars",
+            "Relative Size": "Large",
             "Tip of Mandible (Lower Jaw)": "Large",
+            "White in tail": "narrow",
             "Other": "Pale Feet pale"
         },
         "eacwar1": {
             "Dorsal Color": "Olive-green",
-            "Ventral Color": "Whitish, with contrasting lemon yellow vent, small bars",
+            "Ventral Color": "Whitish, with contrasting lemon yellow vent",
+            "Wing Bars": "small bars",
             "Crowned": "Crowned",
-            "Relative Size": "Narrow",
+            "Relative Size": "Large",
             "Tip of Mandible (Lower Jaw)": "Large",
+            "White in tail": "narrow",
             "Other": "Pale"
         },
         "blylew1": {
             "Dorsal Color": "Green",
-            "Ventral Color": "Pale greenish-yellow, double bars",
+            "Ventral Color": "Pale greenish-yellow",
+            "Wing Bars": "double bars",
             "Crowned": "Crowned",
             "Relative Size": "Medium",
+            "White in tail": "strong white border of inner web curving to include tip",
             "Tip of Mandible (Lower Jaw)": "Pale"
         },
         "davlew1": {
             "Dorsal Color": "Green",
-            "Ventral Color": "Bright greenish-yellow brighter than reguloides, double bars",
+            "Ventral Color": "Bright greenish-yellow brighter than Blyth's LW",
+            "Wing Bars": "double bars",
             "Crowned": "Crowned",
             "Relative Size": "Medium, smaller than reguloides",
+            "White in tail": "straight white inner web",
             "Tip of Mandible (Lower Jaw)": "Pale"
         },
         "yevwar1": {
             "Dorsal Color": "Olive-green",
-            "Ventral Color": "Yellow throat and vent white belly, small double bars",
+            "Ventral Color": "Yellow throat and vent white belly",
+            "Wing Bars": "small double bars",
             "Crowned": "Crowned",
             "Relative Size": "Medium",
+            "White in tail": "narrow, pale yellow",
             "Tip of Mandible (Lower Jaw)": "Pale"
         },
         "subwar3": {
             "Dorsal Color": "Olive-green",
-            "Ventral Color": "Yellow, small double bars",
+            "Ventral Color": "Yellow",
+            "Wing Bars": "small double bars",
             "Crowned": "Crowned",
             "Relative Size": "Medium",
+            "White in tail": "narrow, pale yellow",
             "Tip of Mandible (Lower Jaw)": "Pale"
         },
         "yebwar3": {
             "Dorsal Color": "Olive-green",
-            "Ventral Color": "Whitish, double bars, faint or lacking",
-            "Crowned": "Crowned",
+            "Ventral Color": "Whitish",
+            "Wing Bars": "double bars",
+            "Crowned": "faint or lacking",
             "Patterned Tertials": "Patterned",
             "Yellow rump patch": "Yellow",
-            "Relative Size": "Very narrow",
+            "White in tail": "Very narrow",
+            "Relative Size": "small",
             "Tip of Mandible (Lower Jaw)": "Dark"
         },
         "palwar5": {
             "Dorsal Color": "Olive-green",
-            "Ventral Color": "Pale greenish yellow becoming grayer anteriorly, double bars",
+            "Ventral Color": "Pale greenish yellow becoming grayer anteriorly",
+            "Wing Bars": "double bars",
             "Crowned": "Crowned",
             "Patterned Tertials": "Patterned",
             "Yellow rump patch": "Yellow",
@@ -419,7 +440,8 @@
         },
         "astwar2": {
             "Dorsal Color": "Green",
-            "Ventral Color": "Yellow-green, double orange",
+            "Ventral Color": "Yellow-green",
+            "Wing Bars": "double orange",
             "Crowned": "Crowned",
             "Patterned Tertials": "Patterned",
             "Yellow rump patch": "Yellow",
@@ -438,6 +460,7 @@
         row.querySelector('.name').innerText = birds.filter((item) => item.code === bird)[0].name;
         row.querySelector('.dorsal').innerText = data[bird]['Dorsal Color'] ?? '';
         row.querySelector('.ventral').innerText = data[bird]['Ventral Color'] ?? '';
+        row.querySelector('.wingbars').innerText = data[bird]['Wing Bars'] ?? '';
         row.querySelector('.crowned').innerText = data[bird]['Crowned'] ?? '';
         row.querySelector('.patterned').innerText = data[bird]['Patterned Tertials'] ?? '';
         row.querySelector('.yellow-rump').innerText = data[bird]['Yellow rump patch'] ?? '';
