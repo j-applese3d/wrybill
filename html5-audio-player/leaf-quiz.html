@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leaf Quiz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/AudioPlayer.css">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        body {
+            font-size: 1.1em;
+        }
+        img {
+            max-width: 100%;
+        }
+        button {
+            background: lightblue;
+            padding: 15px;
+            cursor: pointer;
+        }
+        #options, #audio, button {
+            margin: 2em;
+        }
+        #options li {
+            cursor: pointer;
+            padding: 0.5em 1em;
+        }
+        #options li:hover {
+            background: lightblue;
+        }
+    </style>
+    <!-- allow cors -->
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+</head>
+<body>
+
+<div id="quiz">
+    <div id="img"></div>
+    <div id="audio"></div>
+    <div id="options"></div>
+</div>
+
+<script>
+    const birds = [
+        {
+            code: 'radwar1',
+            name: 'Radde\'s Warbler',
+        },
+        {
+            code: 'duswar',
+            name: 'Dusky Warbler',
+        },
+        {
+            code: 'yeswar1',
+            name: 'Yellow-streaked Warbler',
+        },
+        {
+            code: 'butwar1',
+            name: 'Buff-throated Warbler',
+        },
+        {
+            code: 'arcwar1',
+            name: 'Arctic Warbler',
+        },
+        {
+            code: 'grewar3',
+            name: 'Greenish Warbler',
+        },
+        {
+            code: 'pllwar1',
+            name: 'Pale-legged Leaf Warbler',
+        },
+        {
+            code: 'eacwar1',
+            name: 'Eastern Crowned Warbler',
+        },
+        {
+            code: 'blylew1',
+            name: 'Blyth\'s Leaf Warbler',
+        },
+        {
+            code: 'davlew1',
+            name: 'Davison\'s Leaf Warbler',
+        },
+        {
+            code: 'yevwar1',
+            name: 'Yellow-vented Warbler',
+        },
+        {
+            code: 'subwar3',
+            name: 'Sulphur-breasted Warbler',
+        },
+        {
+            code: 'yebwar3',
+            name: 'Yellow-browed Warbler',
+        },
+        {
+            code: 'palwar5',
+            name: 'Pallas\'s Leaf Warbler',
+        },
+        {
+            code: 'astwar2',
+            name: 'Ashy-throated Warbler',
+        },
+        {
+            code: 'bubwar1',
+            name: 'Buff-barred Warbler',
+        },
+    ];
+
+    function nextQuiz() {
+        // clear old quiz
+        document.getElementById('img').innerHTML = '';
+        document.getElementById('audio').innerHTML = '';
+        document.getElementById('options').innerHTML = '';
+
+        const bird = birds[Math.floor(Math.random() * birds.length)];
+        const birdCode = bird.code;
+
+        // load an image:
+        const img = document.createElement('img');
+        const caption = document.createElement('p');
+
+        // fetch possible images from JSON: https://media.ebird.org/api/v1/search?taxonCode=radwar1&count=10&sort=rating_rank_desc&mediaType=a&regionCode=&locale=en_GB&taxaLocale=en_US
+        fetch('https://media.ebird.org/api/v1/search?taxonCode=' + birdCode + '&count=10&sort=rating_rank_desc&mediaType=p&regionCode=&locale=en_GB&taxaLocale=en_US')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                const images = data.results.content.map((item) => {
+                    return {
+                        url: item.mediaUrl,
+                        ebird_link: item.eBirdChecklistUrl,
+                    };
+                });
+
+                // pick a random image
+                const image = images[Math.floor(Math.random() * images.length)];
+
+                img.src = image.url;
+                img.alt = image.ebird_link;
+                caption.innerHTML = image.ebird_link;
+            });
+
+        // add image to quiz
+        document.getElementById('img').appendChild(img);
+        document.getElementById('img').appendChild(caption);
+
+        // load audio (same url as image, except type = a)
+        fetch('https://media.ebird.org/api/v1/search?taxonCode=' + birdCode + '&count=3&sort=rating_rank_desc&mediaType=a&regionCode=&locale=en_GB&taxaLocale=en_US')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                const audios = data.results.content.map((item) => {
+                    return {
+                        url: item.mediaUrl,
+                        ebird_link: item.eBirdChecklistUrl,
+                        behaviors: item.behaviors,
+                    };
+                });
+
+                // pick a random audio
+                const audio = audios[Math.floor(Math.random() * audios.length)];
+
+                // add audio to quiz
+                const audioPlayer = document.createElement('audio');
+                const caption = document.createElement('p');
+                caption.innerHTML = audio.behaviors + " ::: " + audio.ebird_link;
+                audioPlayer.controls = true;
+                audioPlayer.src = audio.url;
+                audioPlayer.alt = audio.ebird_link;
+                document.getElementById('audio').appendChild(audioPlayer);
+                document.getElementById('audio').appendChild(caption);
+            });
+
+        // now list some options for the user to pick from
+        // grab 5 random birds, including the correct one
+        const options = [];
+        options.push(bird);
+        while (options.length < 5) {
+            const option = birds[Math.floor(Math.random() * birds.length)];
+            if (!options.includes(option)) {
+                options.push(option);
+            }
+        }
+        // shuffle option order
+        options.sort(() => Math.random() - 0.5);
+
+        const optionList = document.createElement('ul');
+        options.forEach((item) => {
+            const option = document.createElement('li');
+            option.innerHTML = item.name;
+            option.onclick = () => {
+                if (item.code === birdCode) {
+                    option.style.color = 'green';
+                    option.innerText = item.name + ' (correct)';
+                    // unbind other options now...
+                    options.forEach((item) => {
+                        item.onclick = null;
+                    });
+                } else {
+                    option.style.color = 'red';
+                    option.innerText = item.name + ' (wrong)';
+                }
+            };
+            optionList.appendChild(option);
+        });
+        document.getElementById('options').appendChild(optionList);
+
+        //const audio = new Audio('https://media.ebird.org/api/v1/product/audio/'+bird+'/XC');
+        //audio.play();
+    }
+
+    nextQuiz();
+    // add a button for next quiz
+    const nextButton = document.createElement('button');
+    nextButton.innerHTML = 'Next';
+    nextButton.onclick = nextQuiz;
+    document.getElementById('quiz').appendChild(nextButton);
+</script>
+</body>
