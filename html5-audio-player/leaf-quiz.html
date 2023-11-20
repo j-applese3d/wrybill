@@ -57,66 +57,82 @@
         {
             code: 'radwar1',
             name: 'Radde\'s Warbler',
+            grouping: 1,
         },
         {
             code: 'duswar',
             name: 'Dusky Warbler',
+            grouping: 1,
         },
         {
             code: 'yeswar1',
             name: 'Yellow-streaked Warbler',
+            grouping: 1,
         },
         {
             code: 'butwar1',
             name: 'Buff-throated Warbler',
+            grouping: 1,
         },
         {
             code: 'arcwar1',
             name: 'Arctic Warbler',
+            grouping: 2,
         },
         {
             code: 'grewar3',
             name: 'Greenish Warbler',
+            grouping: 2,
         },
         {
             code: 'pllwar1',
             name: 'Pale-legged Leaf Warbler',
+            grouping: 1.5,
         },
         {
             code: 'eacwar1',
             name: 'Eastern Crowned Warbler',
+            grouping: 2,
         },
         {
             code: 'blylew1',
             name: 'Blyth\'s Leaf Warbler',
+            grouping: 3,
         },
         {
             code: 'davlew1',
             name: 'Davison\'s Leaf Warbler',
+            grouping: 3,
         },
         {
             code: 'yevwar1',
             name: 'Yellow-vented Warbler',
+            grouping: 5,
         },
         {
             code: 'subwar3',
             name: 'Sulphur-breasted Warbler',
+            grouping: 5,
         },
         {
             code: 'yebwar3',
             name: 'Yellow-browed Warbler',
+            grouping: 3,
         },
         {
             code: 'palwar5',
             name: 'Pallas\'s Leaf Warbler',
+            grouping: 3,
         },
         {
             code: 'astwar2',
             name: 'Ashy-throated Warbler',
+            grouping: 3,
         },
         {
             code: 'bubwar1',
             name: 'Buff-barred Warbler',
+            grouping: 3,
         },
     ];
 
@@ -195,13 +211,80 @@
         };
     });
 
+    function getRandomBird() {
+        // get a random one, BUT, prefer ones that have not been answered, then ones that have been answered wrong
+        const answered = [];
+        const unanswered = [];
+        birds.forEach((item) => {
+            if (stats.values[item.code].right + stats.values[item.code].wrong === 0) {
+                unanswered.push(item);
+            }
+            else {
+                answered.push(item);
+            }
+        });
+
+        // sort answered by wrong
+        answered.sort((a, b) => {
+            return stats.values[a.code].wrong - stats.values[b.code].wrong;
+        });
+
+        // give each bird a weight
+        const weights = [];
+        answered.forEach((item) => {
+            for (let i = 1; i*i <= stats.values[item.code].wrong + 1; i++) {
+                weights.push(item);
+                i = i*i;
+            }
+        });
+        unanswered.forEach((item) => {
+            weights.push(item);
+            weights.push(item);
+            weights.push(item);
+        });
+
+        // pick a random one
+        console.log(weights);
+        return weights[Math.floor(Math.random() * weights.length)];
+    }
+
+    function getOptions(rightCode) {
+        // try to get 4 birds from the same group, but make it somewhat random.
+        const options = [];
+        const rightBird = birds.filter((item) => item.code === rightCode)[0];
+        options.push(rightBird);
+
+        const weights = [];
+        birds.forEach((item) => {
+            if (item.code === rightCode) {
+                return; // skip this one
+            }
+            // depending on distance from right bird, add less weight
+            const distance = Math.abs(item.grouping - rightBird.grouping);
+            // if 0, then 10 chances,
+            // if 1, then 8 chances, ...
+            for (let i = 0; i < 10 - distance*2; i++) {
+                weights.push(item);
+            }
+        });
+
+        // pick 4 random ones
+        while (options.length < 5) {
+            const option = weights[Math.floor(Math.random() * weights.length)];
+            if (!options.includes(option)) {
+                options.push(option);
+            }
+        }
+        return options;
+    }
+
     function nextQuiz() {
         // clear old quiz
         document.getElementById('img').innerHTML = '';
         document.getElementById('audio').innerHTML = '';
         document.getElementById('options').innerHTML = '';
 
-        const bird = birds[Math.floor(Math.random() * birds.length)];
+        const bird = getRandomBird();
         const birdCode = bird.code;
 
         // load an image:
@@ -261,14 +344,7 @@
 
         // now list some options for the user to pick from
         // grab 5 random birds, including the correct one
-        const options = [];
-        options.push(bird);
-        while (options.length < 5) {
-            const option = birds[Math.floor(Math.random() * birds.length)];
-            if (!options.includes(option)) {
-                options.push(option);
-            }
-        }
+        const options = getOptions(birdCode);
         // shuffle option order
         options.sort(() => Math.random() - 0.5);
 
@@ -308,7 +384,6 @@
         //audio.play();
     }
 
-    nextQuiz();
     // add a button for next quiz
     const nextButton = document.createElement('button');
     nextButton.innerHTML = 'Next';
@@ -354,6 +429,8 @@
     document.getElementById('quiz').appendChild(statsDiv);
 
     stats.loadFromStorage();
+
+    nextQuiz();
 
 </script>
 
