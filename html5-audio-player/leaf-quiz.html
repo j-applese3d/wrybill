@@ -120,6 +120,81 @@
         },
     ];
 
+    // per bird stats
+    class birdStats {
+        constructor(code) {
+            this.code = code;
+            this.right = 0;
+            this.wrong = 0;
+        }
+
+    }
+
+    class stats {
+        static base = { };
+        static values = { };
+
+        static wrong(code) {
+            this.values[code].wrong++;
+            this.saveToStorage();
+            this.draw();
+        }
+
+        static right(code) {
+            this.values[code].right++;
+            this.saveToStorage();
+            this.draw();
+        }
+
+        static clear() {
+            this.values = JSON.parse(JSON.stringify(this.base));
+            this.draw();
+        }
+
+        static saveToStorage() {
+            localStorage.setItem('stats', JSON.stringify(this.values));
+        }
+        static loadFromStorage() {
+            const stats = JSON.parse(localStorage.getItem('stats'));
+            if (stats) {
+                this.values = stats;
+                this.draw();
+            }
+            else {
+                this.clear();
+            }
+        }
+
+        static draw() {
+            let totals = {
+                right: 0,
+                wrong: 0,
+            };
+            birds.forEach((item) => {
+                const row = document.querySelector('.stat_' + item.code);
+                row.querySelector('.right').innerText = this.values[item.code].right;
+                row.querySelector('.total').innerText = this.values[item.code].right + this.values[item.code].wrong;
+                row.querySelector('.score').innerText = Math.round(this.values[item.code].right / (this.values[item.code].right + this.values[item.code].wrong) * 100) + '%';
+                totals.right += this.values[item.code].right;
+                totals.wrong += this.values[item.code].wrong;
+            });
+            document.getElementById('right').innerText = totals.right;
+            document.getElementById('total').innerText = totals.right + totals.wrong;
+            let perc = Math.round(totals.right / (totals.right + totals.wrong) * 100);
+            if (Number.isNaN(perc)) {
+                perc = 0;
+            }
+            document.getElementById('score').innerText = perc + '%';
+        }
+    }
+
+    birds.forEach((item) => {
+        stats.base[item.code] = {
+            right: 0,
+            wrong: 0,
+        };
+    });
+
     function nextQuiz() {
         // clear old quiz
         document.getElementById('img').innerHTML = '';
@@ -198,23 +273,34 @@
         options.sort(() => Math.random() - 0.5);
 
         const optionList = document.createElement('ul');
+        const optionsFinal = [];
+        let guessMade = false;
         options.forEach((item) => {
             const option = document.createElement('li');
             option.innerHTML = item.name;
             option.onclick = () => {
                 if (item.code === birdCode) {
+                    if (guessMade === false) {
+                        guessMade = true;
+                        stats.right(birdCode);
+                    }
                     option.style.color = 'green';
                     option.innerText = item.name + ' (correct)';
-                    // unbind other options now...
-                    options.forEach((item) => {
-                        item.onclick = null;
+                    // unbind all options now...
+                    optionsFinal.forEach((item) => {
+                        item.onclick = function () { };
                     });
                 } else {
+                    if (guessMade === false) {
+                        guessMade = true;
+                        stats.wrong(birdCode);
+                    }
                     option.style.color = 'red';
                     option.innerText = item.name + ' (wrong)';
                 }
             };
             optionList.appendChild(option);
+            optionsFinal.push(option)
         });
         document.getElementById('options').appendChild(optionList);
 
@@ -228,6 +314,47 @@
     nextButton.innerHTML = 'Next';
     nextButton.onclick = nextQuiz;
     document.getElementById('quiz').appendChild(nextButton);
+
+    // add stats to quiz
+    const statsDiv = document.createElement('div');
+    statsDiv.innerHTML = `
+        <h2>Stats</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Bird</th>
+                    <th>Right</th>
+                    <th>Total</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${birds.map((item) => {
+        return `
+                        <tr class="stat_${item.code}">
+                            <td>${item.name}</td>
+                            <td class="right"></td>
+                            <td class="total"></td>
+                            <td class="score"></td>
+                        </tr>
+                    `;
+                }
+                ).join('')}
+            </tbody>
+            <tfoot>
+                <tr class="total">
+                <!-- totals -->
+                    <th>Overall:</th>
+                    <th id="right"></th>
+                    <th id="total"></th>
+                    <th id="score">%</th>
+                </tr>
+        </table>
+    `;
+    document.getElementById('quiz').appendChild(statsDiv);
+
+    stats.loadFromStorage();
+
 </script>
 
 
