@@ -53,7 +53,7 @@
 </div>
 
 <script>
-    const birds = [
+    let birds = [
         {
             code: 'radwar1',
             name: 'Radde\'s Warbler',
@@ -136,6 +136,44 @@
         },
     ];
 
+    // if the URL contains "Seicercus", then only show those birds
+    if (window.location.href.includes('Seicercus')) {
+        // code: pltwar1, Alström's Warbler
+        // code: marwar4, Martens's Warbler
+        // code: biawar1, Bianchi's Warbler
+        // code: gycwar1, Gray-crowned Warbler
+        // rare code: gycwar2, Gray-cheeked Warbler
+        // code: whswar1, White-spectacled Warbler
+        birds = [
+            {
+                code: 'pltwar1',
+                name: 'Alström\'s Warbler',
+                grouping: 4,
+            },
+            {
+                code: 'marwar4',
+                name: 'Martens\'s Warbler',
+                grouping: 4,
+            },
+            {
+                code: 'biawar1',
+                name: 'Bianchi\'s Warbler',
+                grouping: 4,
+            },
+            {
+                code: 'gycwar1',
+                name: 'Gray-crowned Warbler',
+                grouping: 4,
+            },
+            {
+                code: 'whswar1',
+                name: 'White-spectacled Warbler',
+                grouping: 4,
+            },
+        ]
+    }
+
+
     // per bird stats
     class birdStats {
         constructor(code) {
@@ -151,12 +189,14 @@
         static values = { };
 
         static wrong(code) {
+            this.values[code] ??= { right: 0, wrong: 0 };
             this.values[code].wrong++;
             this.saveToStorage();
             this.draw();
         }
 
         static right(code) {
+            this.values[code] ??= { right: 0, wrong: 0 };
             this.values[code].right++;
             this.saveToStorage();
             this.draw();
@@ -174,6 +214,14 @@
             const stats = JSON.parse(localStorage.getItem('stats'));
             if (stats) {
                 this.values = stats;
+                birds.forEach((item) => {
+                    if (!this.values[item.code]
+                        || typeof this.values[item.code].right !== "number"
+                        || typeof this.values[item.code].wrong !== "number"
+                    ) {
+                        this.values[item.code] = { right: 0, wrong: 0 };
+                    }
+                });
                 this.draw();
             }
             else {
@@ -188,6 +236,9 @@
             };
             birds.forEach((item) => {
                 const row = document.querySelector('.stat_' + item.code);
+                if (!row || !this.values[item.code]) {
+                    return;
+                }
                 row.querySelector('.right').innerText = this.values[item.code].right;
                 row.querySelector('.total').innerText = this.values[item.code].right + this.values[item.code].wrong;
                 row.querySelector('.score').innerText = Math.round(this.values[item.code].right / (this.values[item.code].right + this.values[item.code].wrong) * 100) + '%';
@@ -216,6 +267,10 @@
         const answered = [];
         const unanswered = [];
         birds.forEach((item) => {
+            if (!stats.values[item.code]) {
+                unanswered.push(item);
+                return;
+            }
             if (stats.values[item.code].right + stats.values[item.code].wrong === 0) {
                 unanswered.push(item);
             }
